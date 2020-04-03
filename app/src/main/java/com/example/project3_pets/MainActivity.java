@@ -11,6 +11,8 @@ import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
+    ConnectivityCheck myCheck;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -20,6 +22,16 @@ public class MainActivity extends AppCompatActivity {
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
+
+        //Create new connectivity check instance
+        myCheck = new ConnectivityCheck(this);
+        boolean network = myCheck.isNetworkReachable();
+        boolean wifi = myCheck.isWifiReachable();
+
+        if (network || wifi) {
+
+        }
+
     }
 
     @Override

@@ -11,4 +11,10 @@
     tools:context=".MainActivity"
     tools:showIn="@layout/activity_main"
     android:id = "@+id/rel_lay2">
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@android:drawable/edit_text" />
 </RelativeLayout>
