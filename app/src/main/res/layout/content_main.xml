@@ -12,9 +12,11 @@
     tools:showIn="@layout/activity_main"
     android:id = "@+id/rel_lay2">
 
-    <ImageView
+    <com.example.project3_pets.WebImageView_KP
         android:id="@+id/imageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:srcCompat="@android:drawable/edit_text" />
+        class="com.example.keith.test_networking_lib.WebImageView_KP"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitXY"
+        />
 </RelativeLayout>

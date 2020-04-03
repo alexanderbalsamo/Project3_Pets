@@ -1,9 +1,11 @@
 package com.example.project3_pets;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.preference.PreferenceManager;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -30,11 +32,13 @@ public class MainActivity extends AppCompatActivity {
 
     SharedPreferences myPreferences;
     private SharedPreferences.OnSharedPreferenceChangeListener listener;
+
     ConnectivityCheck myCheck;
     private String userURL;
     private JSONArray jsonArray;
     private int jsonNumArray;
     Spinner spinner;
+    private String imageURL;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +63,11 @@ public class MainActivity extends AppCompatActivity {
                     //Update URL and spinner
                     getPrefValues(myPreferences);
                     downloadURL();
-                    //TODO Grab the new image
+                    try {
+                        setImage(jsonArray.getJSONObject(0).getString("file"));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         };
@@ -73,6 +81,37 @@ public class MainActivity extends AppCompatActivity {
         //Download Images
         downloadURL();
 
+        //set image
+        try {
+            setImage(jsonArray.getJSONObject(0).getString("file"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void setImage(String fileName) {
+        String jsonPets = "pets.json";
+        imageURL = userURL.substring(0, userURL.length()-jsonPets.length()) + fileName;
+        WebImageView_KP imView = (WebImageView_KP) findViewById(R.id.imageView);
+        imView.setImageUrl(imageURL);
+        findViewById(R.id.imageView).setVisibility(View.VISIBLE);
+    }
+
+    public void errorAlert() {
+        String alertMessage = "404 Error!";
+        new AlertDialog.Builder(this)
+                .setMessage(alertMessage)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // This will do nothing
+                    }
+                })
+                .show();
+        // disable things
+        spinner.setEnabled(false);
+        spinner.setVisibility(View.GONE);
+        findViewById(R.id.imageView).setVisibility(View.GONE);
     }
 
     private void getPrefValues(SharedPreferences settings) {
@@ -81,8 +120,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void processJSON(String string) {
         if (string == null) {
-            spinner.setEnabled(false);
-            spinner.setVisibility(View.GONE);
+            errorAlert();
         }
         try {
             JSONObject jsonobject = new JSONObject(string);
@@ -115,6 +153,9 @@ public class MainActivity extends AppCompatActivity {
             DownloadTask_KP myTask = new DownloadTask_KP(this);
             myTask.execute(userURL);
         }
+        else{
+            errorAlert();
+        }
     }
 
     private void setupSimpleSpinner() {
@@ -144,8 +185,11 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> arg0, View arg1, int pos, long rowid) {
                 if (arg0.getChildAt(SELECTED_ITEM) != null) {
-                    ((TextView) arg0.getChildAt(SELECTED_ITEM)).setTextColor(Color.WHITE);
-                    Toast.makeText(MainActivity.this, (String) arg0.getItemAtPosition(pos), Toast.LENGTH_SHORT).show();
+                    try {
+                        setImage(jsonArray.getJSONObject(pos).getString("file"));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
 

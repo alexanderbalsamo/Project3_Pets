@@ -3,9 +3,12 @@
  */
 package com.example.project3_pets;
 
+import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
